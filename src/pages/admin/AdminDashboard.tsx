@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { EventApi } from '@/services/apiService';
@@ -8,7 +7,8 @@ import {
   Users, 
   Ticket, 
   TrendingUp,
-  ArrowUpRight
+  ArrowUpRight,
+  ImageIcon
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -187,7 +187,7 @@ const AdminDashboard: React.FC = () => {
               </Button>
               <Button className="w-full justify-start" asChild>
                 <Link to="/admin/gallery/upload">
-                  <Image className="mr-2 h-4 w-4" />
+                  <ImageIcon className="mr-2 h-4 w-4" />
                   Upload Gallery Image
                 </Link>
               </Button>
