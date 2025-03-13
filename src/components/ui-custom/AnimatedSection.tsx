@@ -9,6 +9,7 @@ interface AnimatedSectionProps {
   delay?: number;
   threshold?: number;
   once?: boolean;
+  onClick?: () => void;
 }
 
 const AnimatedSection: React.FC<AnimatedSectionProps> = ({
@@ -18,6 +19,7 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   delay = 0,
   threshold = 0.1,
   once = true,
+  onClick,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -57,6 +59,7 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
       ref={ref}
       className={cn(animationClass, className)}
       style={{ ...delayStyle, willChange: 'transform, opacity' }}
+      onClick={onClick}
     >
       {children}
     </div>
