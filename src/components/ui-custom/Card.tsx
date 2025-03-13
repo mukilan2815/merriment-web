@@ -22,7 +22,7 @@ interface CardComponentProps {
   Footer: typeof CardFooter;
 }
 
-const Card: React.FC<CardProps> & CardComponentProps = ({
+const CardComponent: React.FC<CardProps> = ({
   className,
   children,
   hover = false,
@@ -56,6 +56,11 @@ const Card: React.FC<CardProps> & CardComponentProps = ({
   );
 };
 
+// Create the compound component
+const Card = CardComponent as React.FC<CardProps> & CardComponentProps;
+
+// Properly assign all properties
+Card.Card = CardComponent;
 Card.Header = CardHeader;
 Card.Title = CardTitle;
 Card.Description = CardDescription;

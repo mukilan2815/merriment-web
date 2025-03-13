@@ -2,10 +2,25 @@
 import React from 'react';
 import { Button as ShadcnButton } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { buttonVariants } from '@/components/ui/button';
+import { type VariantProps } from 'class-variance-authority';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'primary' | 'accent';
-  size?: 'default' | 'sm' | 'lg' | 'icon' | 'xl';
+// Create a modified type that extends the original button variants
+type ButtonVariants = 
+  | 'default'
+  | 'destructive'
+  | 'outline'
+  | 'secondary'
+  | 'ghost'
+  | 'link'
+  | 'primary'
+  | 'accent';
+
+type ButtonSizes = 'default' | 'sm' | 'lg' | 'icon' | 'xl';
+
+interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'size'> {
+  variant?: ButtonVariants;
+  size?: ButtonSizes;
   children: React.ReactNode;
   isLoading?: boolean;
   icon?: React.ReactNode;
@@ -30,20 +45,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Handle custom variants
     if (variant === 'primary' || variant === 'accent') {
       variantClass = customVariants[variant];
-      variant = undefined as any;
+      variant = 'default' as any;
     }
 
     // Handle custom sizes
     if (size === 'xl') {
       sizeClass = customSizes[size];
-      size = undefined as any;
+      size = 'default' as any;
     }
 
     return (
       <ShadcnButton
         ref={ref}
-        variant={variant}
-        size={size}
+        variant={variant as VariantProps<typeof buttonVariants>['variant']}
+        size={size as VariantProps<typeof buttonVariants>['size']}
         className={cn(
           'font-medium relative overflow-hidden group',
           variantClass,
