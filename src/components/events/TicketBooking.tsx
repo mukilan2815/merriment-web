@@ -7,7 +7,10 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import Button from '../ui-custom/Button';
 import { toast } from 'sonner';
-import { Event, EventService } from '@/services/eventService';
+import { EventApi } from '@/services/apiService';
+import { Event } from '@/services/types';
+import { useUserContext } from '@/context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 interface TicketBookingProps {
   event: Event;
@@ -16,9 +19,9 @@ interface TicketBookingProps {
 
 const TicketBooking: React.FC<TicketBookingProps> = ({ event, onClose }) => {
   const [quantity, setQuantity] = useState(1);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useUserContext();
+  const navigate = useNavigate();
 
   const totalPrice = event.price * quantity;
 
@@ -34,22 +37,17 @@ const TicketBooking: React.FC<TicketBookingProps> = ({ event, onClose }) => {
   };
 
   const handleBookTicket = async () => {
-    if (!name.trim() || !email.trim()) {
-      toast.error('Please fill in all fields');
-      return;
-    }
-
-    if (!email.includes('@')) {
-      toast.error('Please enter a valid email address');
+    if (!user) {
+      toast.error('Please log in to book tickets');
+      onClose();
+      navigate('/login');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // In a real application, we would use the actual user ID
-      // Here we're using a mock user ID 'u2' from our mock data
-      await EventService.bookTicket(event.id, 'u2', quantity);
+      await EventApi.bookTicket(event.id, quantity);
       
       setIsLoading(false);
       toast.success('Tickets booked successfully!');
@@ -72,27 +70,6 @@ const TicketBooking: React.FC<TicketBookingProps> = ({ event, onClose }) => {
         </DialogHeader>
         
         <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
-            <Input 
-              id="name" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
-              placeholder="Enter your full name"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              placeholder="Enter your email"
-            />
-          </div>
-          
           <div className="space-y-2">
             <Label htmlFor="quantity">Number of Tickets</Label>
             <Input 
